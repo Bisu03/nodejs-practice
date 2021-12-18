@@ -1,39 +1,27 @@
-const fs = require("fs")
+const fs = require("fs");
+const http = require("http");
 
-// creouirating a new file 
-// fs.writeFileSync("read.txt","welcome to my channel")
+const locahost = "127.0.0.1";
+const port = 3000;
 
-// fs.writeFileSync("read.txt","welcome to node js")
+const server = http.createServer((req, res) => {
+  const data = fs.readFileSync(`${__dirname}/api/user.json`, "utf-8",{ "content-type": "application/json" });
+  const getdata = JSON.parse(data);
 
+  if (req.url == "/") {
+    res.end("Hello, World!");
+  } else if (req.url == "/about") {
+    res.end("about me");
+  } else if (req.url == "/userapi") { 
+    console.log(getdata);
+    res.end(getdata[0].name);
+  } else {
+    res.statusCode = 404;
+    res.setHeader("Content-Type", "text/html");
+    res.end("<h1> 404 error </h1>");
+  }
+});
 
-
-// const read = fs.readFileSync("read.txt")
-// console.log(read);
-
-// data=read.toString()
-// console.log(data);
-
-
-//  rename file 
-// fs.renameSync("read.txt", "file.txt")
-
-
-
-// create a new folder 
-// fs.mkdirSync('bisu')
-
-// fs.writeFileSync('bisu/bio.txt','name-biswanath bera roll 26')
-
-// fs.appendFileSync('bisu/bio.txt',' name- nothing')
-
-// const read=fs.readFileSync('bisu/bio.txt').toString()
-// console.log(read);
-
-// rename file 
-
-// fs.renameSync('bisu/bio.txt','bisu/mybio.txt')
-
-
-// delete file 
-
-// fs.unlinkSync('file.txt')
+server.listen(port, locahost, "localhost", () => {
+  console.log(`Server running at http://${locahost}:${port}`);
+});
